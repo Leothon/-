@@ -1,11 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
+    aaptOptions.cruncherEnabled = false
+
+    aaptOptions.useNewCruncher = false
     defaultConfig {
-        applicationId "com.example.a10483.todayweather"
+        applicationId "com.example.a10483.weilog"
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -19,10 +23,23 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.getbase:floatingactionbutton:1.10.1'
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile 'com.makeramen:roundedimageview:2.2.1'
+    compile 'com.android.support:recyclerview-v7:25.0.+'
+    testCompile 'junit:junit:4.12'
+}
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
 }
