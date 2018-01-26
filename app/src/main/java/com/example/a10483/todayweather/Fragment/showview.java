@@ -44,9 +44,9 @@ public class showview extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =inflater.inflate(R.layout.showview,container,false);
+        //View view =inflater.inflate(R.layout.showview,container,false);
 
-        recyclerView=(RecyclerView)view.findViewById(R.id.temp_pic_now);
+        /*recyclerView=(RecyclerView)view.findViewById(R.id.temp_pic_now);
         LinearLayoutManager layoutManager=new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
@@ -79,13 +79,14 @@ public class showview extends Fragment {
         });
 
         requestQueue.add(jsonObjectRequest);
-        requestQueue.add(jsonObjectRequest2);
-        return view;
+        requestQueue.add(jsonObjectRequest2);*/
+        //return view;
+        return null;
     }
 
 
 
-    public void binddata(ArrayList<weatherdata> weatherdata){
+   /* public void binddata(ArrayList<weatherdata> weatherdata){
         weatherdataArrayList=weatherdata;
         Collections.sort(weatherdata, new Comparator<com.example.a10483.todayweather.data.weatherdata>() {
             @Override
@@ -105,7 +106,7 @@ public class showview extends Fragment {
         weatherdatarecyclerAdapter=new WeatherdatarecyclerAdapter(getContext(),weatherdataArrayList,low,high);
         recyclerView.setAdapter(weatherdatarecyclerAdapter);
 
-    }
+    }*/
 
 
 }

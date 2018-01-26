@@ -8,9 +8,22 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme2" parent="Theme.AppCompat.Light.NoActionBar">
+
+
+    <style name="AppTheme2" parent="AppTheme.Base">
+
+    </style>
+
+    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:toolbarStyle">@style/MyToolbar</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
 
+
+    <style name="MyToolbar" parent="Widget.AppCompat.Toolbar">
+
+        <item name="contentInsetStart">0dp</item>
+
+    </style>
 </resources>

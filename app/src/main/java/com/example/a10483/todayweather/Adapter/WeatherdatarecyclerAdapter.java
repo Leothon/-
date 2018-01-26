@@ -55,14 +55,14 @@ public class WeatherdatarecyclerAdapter extends RecyclerView.Adapter<Weatherdata
         Resources resources = mContext.getResources();
         weatherdata weatherdata = mDatas.get(position);
         holder.dayText.setText(weatherdata.getCond_txt_d());
-        int iconday = resources.getIdentifier("wth_code_" + weatherdata.getCond_code_d(), "drawable", mContext.getPackageName());
+        int iconday = resources.getIdentifier("ic"+weatherdata.getCond_code_d(), "drawable", mContext.getPackageName());
         if (iconday == 0) {
-            holder.dayIcon.setImageResource(R.drawable.ic_sun);
+            holder.dayIcon.setImageResource(R.drawable.ic100);
         } else {
             holder.dayIcon.setImageResource(iconday);
         }
         holder.weatherLineView.setLowHighestdata(mLowestTem, mHighestTem);
-        int iconight = resources.getIdentifier("wth_code_" + weatherdata.getCond_code_d(), "drawable", mContext.getPackageName());
+        int iconight = resources.getIdentifier("ic" + weatherdata.getCond_code_d(), "drawable", mContext.getPackageName());
         if (iconight == 0) {
             holder.nighticon.setImageResource(R.drawable.ic_sun_night);
         } else {

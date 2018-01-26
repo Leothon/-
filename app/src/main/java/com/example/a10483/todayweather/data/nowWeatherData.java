@@ -13,29 +13,29 @@ public class nowWeatherData {
     private String cond_txt;
     private String wind_dir;
     private String wind_sc;
-    private int hum;
-    private int pcpn;
+    private String  hum;
+    private String pcpn;
 
-    private ArrayList<weatherdata> weatherdataArrayList;
+    /*private ArrayList<weatherdata> weatherdataArrayList;
 
     public ArrayList<weatherdata> getWeatherdataArrayList(){
         return weatherdataArrayList;
     }
     public void setWeatherdataArrayList(ArrayList<weatherdata> weatherdataArrayList){
         this.weatherdataArrayList=weatherdataArrayList;
-    }
+    }*/
 
-    public int getHum(){
+    public String  getHum(){
         return hum;
     }
-    public void setHum(int hum){
+    public void setHum(String  hum){
         this.hum=hum;
     }
 
-    public int getPcpn(){
+    public String getPcpn(){
         return pcpn;
     }
-    public void setPcpn(int pcpn){
+    public void setPcpn(String pcpn){
         this.pcpn=pcpn;
     }
     public String getWind_sc(){
