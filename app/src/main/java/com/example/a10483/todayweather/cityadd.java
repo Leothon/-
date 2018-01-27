@@ -1,6 +1,7 @@
 package com.example.a10483.todayweather;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.support.v4.app.ActivityCompat;
@@ -8,11 +9,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -55,6 +60,7 @@ public class cityadd extends AppCompatActivity {
         setContentView(R.layout.cityadd);
         checkPermission();
         String Stringjson=InitData();
+
         setJsonCitisData(Stringjson);
 
         provinceSp=(Spinner)findViewById(R.id.pri_name_sp);
@@ -73,6 +79,7 @@ public class cityadd extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedPro = "";
                 selectedPro = (String) parent.getSelectedItem();
+                //Log.d("cityadd", "所选之省市"+selectedPro);
                 updateCity(selectedPro);//通过省名选择所有市列表
 
             }
@@ -107,6 +114,9 @@ public class cityadd extends AppCompatActivity {
                 selectedArea = "";
                 selectedArea = (String) parent.getSelectedItem();
                 cityaddname.setText(selectedPro + selectedCity + selectedArea);
+
+
+                //添加新的页面
             }
 
             @Override
@@ -116,6 +126,8 @@ public class cityadd extends AppCompatActivity {
         });
 
     }
+
+
 
     private void checkPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -159,13 +171,21 @@ public class cityadd extends AppCompatActivity {
     private void updateCity(String pro) {
 
         String[] cities = citiesDataMap.get(pro);
-        for (int i = 0; i < cities.length; i++) {
+
+        /*for (int i = 0; i < cities.length; i++) {
+
             citiesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, cities);
             citiesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             citiesSp.setAdapter(citiesAdapter);
             citiesAdapter.notifyDataSetChanged();
             citiesSp.setSelection(0);
-        }
+        }*/
+        //Log.d("cityadd", "长度"+cities.length);
+        citiesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, cities);
+        citiesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        citiesSp.setAdapter(citiesAdapter);
+        citiesAdapter.notifyDataSetChanged();
+        citiesSp.setSelection(0);
 
     }
 
@@ -178,45 +198,33 @@ public class cityadd extends AppCompatActivity {
                 provinceData = new String[array.length()];
                 String mProvinceStr = null;
                 for (int i = 0; i < array.length(); i++) {
-
                     JSONObject mProvinceObject = array.getJSONObject(i);
-                    if (mProvinceObject.has("name")) {
-                        mProvinceStr = mProvinceObject.getString("name");
-                        provinceData[i] = mProvinceStr;
-                    } else {
-                        provinceData[i] = "unknown province";
-                    }
-
-
+                    mProvinceStr = mProvinceObject.getString("name");
+                    provinceData[i] = mProvinceStr;
                     String mCityStr = null;
                     JSONArray cityArray = mProvinceObject.getJSONArray("city");
                     citiesData = new String[cityArray.length()];
                     for (int j = 0; j < cityArray.length(); j++) {
                         JSONObject mCityObject = cityArray.getJSONObject(j);
-                        if (mCityObject.has("name")) {
-                            mCityStr = mCityObject.getString("name");
-                            citiesData[j] = mCityStr;
-                        } else {
-                            citiesData[j] = "unknown city";
-                        }
+                        mCityStr = mCityObject.getString("name");
+                        citiesData[j] = mCityStr;
                         JSONArray areaArray = mCityObject.getJSONArray("area");
-
                         areaData = new String[areaArray.length()];
                         for (int m = 0; m < areaArray.length(); m++) {
-                            JSONObject areaObject = areaArray.getJSONObject(m);
-                            String mAreastr=areaObject.toString();
-                            areaData[m]=mAreastr;
-                            //Log.d("cityadd", areaData[m]);
-                        }
+                            //JSONObject areaObject = areaArray.getJSONObject(m);
+                            String mAreastr=areaArray.get(m).toString();
 
+                            areaData[m]=mAreastr;
+                        }
                         areaDataMap.put(mCityStr, areaData);
                     }
-
                     citiesDataMap.put(mProvinceStr, citiesData);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+
 
         }
     }
@@ -226,11 +234,11 @@ public class cityadd extends AppCompatActivity {
         AssetManager assetManager=this.getAssets();
 
         try{
-            InputStream is=assetManager.open("city.json");
+            InputStream is=assetManager.open("city.txt");
             byte[] data=new byte[is.available()];
             int len=-1;
             while ((len=is.read(data))!=-1){
-                sb.append(new String(data,0,len,"GBK"));
+                sb.append(new String(data,0,len,"UTF-8"));
             }
             is.close();
             return sb.toString();

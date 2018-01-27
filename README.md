@@ -46,3 +46,10 @@ Volley获取数据一直为空，因为volley异步加载，需要用到回调�
 解决spinner查询城市功能，加入edittext搜索城市的功能
 Toolbar标题栏设置成功
 待解决：定位，桌面控件，通知栏.
+
+2018年1月27日
+出现的问题：全国省市区数据解析时空指针错误：原因：解析无Key值的数据时，直接获取该数组的value值。
+editText的输入字符自动搜索功能。
+
+Viewpager添加删除城市，在viewpager中添加fragment，在fragment中设置本城市的数据。
+在此不在详细解释。
