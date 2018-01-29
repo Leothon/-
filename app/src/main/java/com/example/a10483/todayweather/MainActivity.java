@@ -7,7 +7,13 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -23,6 +29,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -31,6 +38,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.a10483.todayweather.Adapter.WeatherdatarecyclerAdapter;
 import com.example.a10483.todayweather.Adapter.weatherViewpagerAdapter;
+import com.example.a10483.todayweather.data.LifeData;
+import com.example.a10483.todayweather.data.airdata;
 import com.example.a10483.todayweather.data.nowWeatherData;
 import com.example.a10483.todayweather.data.weatherdata;
 import com.google.gson.Gson;
@@ -39,11 +48,18 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -64,6 +80,25 @@ public class MainActivity extends AppCompatActivity {
     private TextView pm10_now;
     private TextView pm25_now;
     private TextView so2_now;
+
+    private TextView com_num;
+    private TextView com_txt;
+
+    private TextView was_num;
+    private TextView was_txt;
+
+    private TextView fou_num;
+    private TextView fou_txt;
+
+    private TextView spr_num;
+    private TextView spr_txt;
+
+    private TextView clo_num;
+    private TextView clo_txt;
+
+    private TextView trou_num;
+    private TextView trou_txt;
+
     private RecyclerView recyclerView;
     private ArrayList<weatherdata> weatherdataArrayList;
     private TextView city_name;
@@ -73,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String key="a4edf8532f7e43019279c3ec59cdb2d9";
     private static final String weathernowurl="https://free-api.heweather.com/s6/weather/now";
     private static final String foreurl="https://free-api.heweather.com/s6/weather/forecast";
+    private static final String airquaurl="https://free-api.heweather.com/s6/air/now";
+    private static final String lifeurl="https://free-api.heweather.com/s6/weather/lifestyle";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -103,6 +140,26 @@ public class MainActivity extends AppCompatActivity {
         pm10_now=(TextView)view.findViewById(R.id.pm10_now);
         pm25_now=(TextView)view.findViewById(R.id.pm25_now);
         so2_now=(TextView)view.findViewById(R.id.so2_now);
+
+        com_num=(TextView)view.findViewById(R.id.com_num);
+        com_txt=(TextView)view.findViewById(R.id.com_txt);
+
+        was_num=(TextView)view.findViewById(R.id.was_num);
+        was_txt=(TextView)view.findViewById(R.id.was_txt);
+
+        spr_num=(TextView)view.findViewById(R.id.spr_num);
+        spr_txt=(TextView)view.findViewById(R.id.spr_txt);
+
+        trou_num=(TextView)view.findViewById(R.id.trou_num);
+        trou_txt=(TextView)view.findViewById(R.id.trou_txt);
+
+        clo_num=(TextView)view.findViewById(R.id.clo_num);
+        clo_txt=(TextView)view.findViewById(R.id.clo_txt);
+
+        fou_num=(TextView)view.findViewById(R.id.fou_num);
+        fou_txt=(TextView)view.findViewById(R.id.fou_txt);
+
+
         recyclerView=(RecyclerView)view.findViewById(R.id.tmp_pic_now);//此处的findviewbyid一定要家view，因为它的id是在添加的view中获取的，而不是本activity的view中。
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -115,6 +172,11 @@ public class MainActivity extends AppCompatActivity {
 
         weatherdataArrayList=new ArrayList<>();
         String city=getLocation();
+
+        Intent intent=getIntent();
+        if(intent.getStringExtra("select_city")!=null){
+            city=intent.getStringExtra("select_city");
+        }
         RequestQueue requestQueue= Volley.newRequestQueue(this);
         String foresturl=foreurl+"?key="+key+"&location="+city;
         setfordata(foresturl, requestQueue, new VolleyCallback() {
@@ -139,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     binddata(weatherdataArrayList);
-                    Log.d("MainActivity","需要的数组长度"+weatherdataArrayList.size());
+                    //Log.d("MainActivity","需要的数组长度"+weatherdataArrayList.size());
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -147,14 +209,151 @@ public class MainActivity extends AppCompatActivity {
         });
         mainViewpager.setAdapter(weatherViewpagerAdapter);
         String nowurl=weathernowurl+"?key="+key+"&location="+city;
+        String airqua=airquaurl+"?key="+key+"&location="+city;
+        final String lifenum=lifeurl+"?key="+key+"&location="+city;
+        setAirdata(airqua,requestQueue);
+        final List<String> list=new ArrayList<>();
+
+        setNowdata(nowurl, requestQueue, new VolleyCallback() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try{
+                    //Log.d("MainActivity","此处运行");
+                    String jsonString=response.toString();
+                    JsonParser jsonParser=new JsonParser();
+                    JsonObject jsonObject=jsonParser.parse(jsonString).getAsJsonObject();
+                    Gson gson=new Gson();
+                    JsonArray nowjsonarray=jsonObject.getAsJsonArray("HeWeather6");
+                    JsonElement elnow=nowjsonarray.get(0);
+                    JsonObject nowobject=elnow.getAsJsonObject();
+                    JsonObject now=nowobject.getAsJsonObject("now");
+                    JsonObject location=nowobject.getAsJsonObject("basic");
+                    String locationString=location.toString();
+                    JSONObject locationobject=new JSONObject(locationString);
+                    String locationcity=locationobject.getString("location");
+                    city_name.setText(locationcity);
+                    nowWeatherData nowweatherdata=gson.fromJson(now,nowWeatherData.class);
+                    wea_now.setText(nowweatherdata.getCond_txt());
+                    int tmp=nowweatherdata.getTmp();
+                    int drawableid=transtmp(tmp);
+
+                    tmp_now.setImageResource(drawableid);
+                    win_dir.setText(nowweatherdata.getWind_dir());
+                    win_sc.setText(nowweatherdata.getWind_sc());
+                    hum_now.setText(nowweatherdata.getHum());
+                    pcpn_now.setText(nowweatherdata.getPcpn());
+                    list.add(""+tmp);
+                    list.add(""+nowweatherdata.getCond_code());
 
 
-        setNowdata(nowurl,requestQueue);
-
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        setLifeData(lifenum,requestQueue);
         setWeightlistener();
+
+        if(list!=null){
+            Intent service=new Intent(this,foregroundService.class);
+            service.putExtra("cityname",city).putExtra("tmp",list.get(0)).putExtra("wea",list.get(1));
+            startService(service);
+        }
 
     }
 
+    public void setLifeData(String url,RequestQueue queue){
+        JsonObjectRequest liftRequest=new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try{
+                    ArrayList<LifeData> list=new ArrayList<>();
+                    String json=response.toString();
+                    JsonParser parser=new JsonParser();
+                    JsonObject object=parser.parse(json).getAsJsonObject();
+                    JsonArray array=object.getAsJsonArray("HeWeather6");
+                    JsonElement element=array.get(0);
+                    JsonObject jsonObject=element.getAsJsonObject();
+                    JsonArray lifearray=jsonObject.getAsJsonArray("lifestyle");
+
+                    for(int i=0;i<lifearray.size();i++){
+                        JsonElement lifeelement=lifearray.get(i);
+                        JsonObject lifeobject=lifeelement.getAsJsonObject();
+                        Gson gson=new Gson();
+                        LifeData ld=gson.fromJson(lifeobject,LifeData.class);
+                        list.add(ld);
+                    }
+
+
+                    com_num.setText(list.get(0).getBrf());
+                    com_txt.setText(list.get(0).getTxt());
+
+                    was_num.setText(list.get(6).getBrf());
+                    was_txt.setText(list.get(6).getTxt());
+
+                    clo_num.setText(list.get(1).getBrf());
+                    clo_txt.setText(list.get(1).getTxt());
+
+                    trou_num.setText(list.get(4).getBrf());
+                    trou_txt.setText(list.get(4).getTxt());
+
+                    fou_num.setText(list.get(2).getBrf());
+                    fou_txt.setText(list.get(2).getTxt());
+
+                    spr_num.setText(list.get(3).getBrf());
+                    spr_txt.setText(list.get(3).getTxt());
+
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        queue.add(liftRequest);
+    }
+
+
+    public void setAirdata(String url,RequestQueue queue){
+        JsonObjectRequest airrequest=new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try{
+                    String jsonString=response.toString();
+                    JsonParser parser=new JsonParser();
+                    JsonObject object=parser.parse(jsonString).getAsJsonObject();
+                    JsonArray array=object.getAsJsonArray("HeWeather6");
+                    JsonElement element=array.get(0);
+                    JsonObject jsonObject=element.getAsJsonObject();
+                    JsonObject airobject=jsonObject.getAsJsonObject("air_now_city");
+                    Gson gson=new Gson();
+                    airdata ad=gson.fromJson(airobject,airdata.class);
+
+                    airnum_now.setText(ad.getAqi());
+                    mainpul_now.setText(ad.getMain());
+                    airqua_now.setText(ad.getQlty());
+                    pm10_now.setText(ad.getPm10());
+                    pm25_now.setText(ad.getPm25());
+                    so2_now.setText(ad.getSo2());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        queue.add(airrequest);
+    }
     public void setWeightlistener(){
         city_manage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -235,38 +434,12 @@ public class MainActivity extends AppCompatActivity {
         });
         requestQueue.add(jsonforest);
     }
-    public void setNowdata(String url, RequestQueue requestQueue){
+    public void setNowdata(String url, RequestQueue requestQueue,final VolleyCallback callback){
         JsonObjectRequest jsonnow=new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                try{
-                    Log.d("MainActivity","此处运行");
-                    String jsonString=response.toString();
-                    JsonParser jsonParser=new JsonParser();
-                    JsonObject jsonObject=jsonParser.parse(jsonString).getAsJsonObject();
-                    Gson gson=new Gson();
-                    JsonArray nowjsonarray=jsonObject.getAsJsonArray("HeWeather6");
-                    JsonElement elnow=nowjsonarray.get(0);
-                    JsonObject nowobject=elnow.getAsJsonObject();
-                    JsonObject now=nowobject.getAsJsonObject("now");
-                    JsonObject location=nowobject.getAsJsonObject("basic");
-                    String locationString=location.toString();
-                    JSONObject locationobject=new JSONObject(locationString);
-                    String locationcity=locationobject.getString("location");
-                    city_name.setText(locationcity);
-                    nowWeatherData nowweatherdata=gson.fromJson(now,nowWeatherData.class);
-                    wea_now.setText(nowweatherdata.getCond_txt());
-                    int tmp=nowweatherdata.getTmp();
-                    int drawableid=transtmp(tmp);
 
-                    tmp_now.setImageResource(drawableid);
-                    win_dir.setText(nowweatherdata.getWind_dir());
-                    win_sc.setText(nowweatherdata.getWind_sc());
-                    hum_now.setText(nowweatherdata.getHum());
-                    pcpn_now.setText(nowweatherdata.getPcpn());
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+                callback.onSuccess(response);
 
             }
         }, new Response.ErrorListener() {
@@ -290,10 +463,58 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public String getLocation(){
-        String city="洛阳";
-        return city;//获取定位
+        String cityname="洛阳";
+        String locationProvider=null;
+        LocationManager locationManager=(LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        List<String> prividerLists=locationManager.getProviders(true);
+        if(prividerLists.contains(LocationManager.GPS_PROVIDER)){
+            locationProvider=LocationManager.GPS_PROVIDER;
+        }else if(prividerLists.contains(LocationManager.NETWORK_PROVIDER)){
+            locationProvider=LocationManager.NETWORK_PROVIDER;
+        }else{
+            Toast.makeText(this,"请检查定位装置",Toast.LENGTH_SHORT).show();
+
+        }
+
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Location location = locationManager.getLastKnownLocation(locationProvider);
+            if (location != null) {
+                cityname=updateWithNewLocation(location);
+            } else {
+                Toast.makeText(this,"无法获取位置",Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
+
+       return cityname;
     }
 
+    private String  updateWithNewLocation(Location location) {
+
+        String addressname=null;
+        Double lat;
+        Double lng;
+        if (location != null) {
+            lat = location.getLatitude();
+            lng = location.getLongitude();
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            try {
+                List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+                if (addresses.size() > 0) {
+                    Address address = addresses.get(0);
+                    addressname=address.getSubLocality();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+        }
+
+        return addressname;
+    }
     public void addpage(nowWeatherData nwd){//增加页面，增添数据
 
         LayoutInflater inflater=LayoutInflater.from(this);
@@ -348,7 +569,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public interface VolleyCallback{
-        void onSuccess(JSONObject  jsonObject);
+        void onSuccess(JSONObject jsonObject);
     }
 }
 

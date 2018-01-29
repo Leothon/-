@@ -14,7 +14,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:background="@color/red"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -269,8 +268,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:background="@color/blue">
+                android:layout_height="match_parent">
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/tmp_pic_now"
                     android:layout_width="match_parent"
@@ -281,24 +279,228 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:background="@color/black">
+                android:layout_height="500dp"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:text="舒适度指数："
+                            android:textSize="20sp"
+                            android:gravity="right|center"/>
+                        <TextView
+                            android:id="@+id/com_num"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:text="较适宜"
+                            android:textSize="20sp"
+                            android:gravity="center|left"/>
+                    </LinearLayout>
 
+                    <TextView
+                        android:id="@+id/com_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+
+                        android:text="天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:text="洗车指数："
+                            android:textSize="20sp"
+                            android:gravity="right|center"/>
+                        <TextView
+                            android:id="@+id/was_num"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:text="较适宜"
+                            android:textSize="20sp"
+                            android:gravity="center|left"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/was_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:text="天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:text="穿衣指数："
+                            android:textSize="20sp"
+                            android:gravity="right|center"/>
+                        <TextView
+                            android:id="@+id/clo_num"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:text="较适宜"
+                            android:textSize="20sp"
+                            android:gravity="center|left"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/clo_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:text="天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:text="感冒指数："
+                            android:textSize="20sp"
+                            android:gravity="right|center"/>
+                        <TextView
+                            android:id="@+id/fou_num"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:text="较适宜"
+                            android:textSize="20sp"
+                            android:gravity="center|left"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/fou_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:text="天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:text="运动指数："
+                            android:textSize="20sp"
+                            android:gravity="right|center"/>
+                        <TextView
+                            android:id="@+id/spr_num"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:text="较适宜"
+                            android:textSize="20sp"
+                            android:gravity="center|left"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/spr_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:text="天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:text="旅游指数："
+                            android:textSize="20sp"
+                            android:gravity="right|center"/>
+                        <TextView
+                            android:id="@+id/trou_num"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:text="较适宜"
+                            android:textSize="20sp"
+                            android:gravity="center|left"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/trou_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:text="天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜天气适宜"/>
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:background="@color/yellow">
+                android:layout_height="40dp"
+                android:textSize="15sp"
+                android:text="数据来自：和风天气"
+                android:textColor="@color/white"
+                android:gravity="center"/>
 
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="@color/brown">
-
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

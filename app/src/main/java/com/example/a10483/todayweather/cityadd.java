@@ -2,6 +2,7 @@ package com.example.a10483.todayweather;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.support.v4.app.ActivityCompat;
@@ -114,7 +115,9 @@ public class cityadd extends AppCompatActivity {
                 selectedArea = "";
                 selectedArea = (String) parent.getSelectedItem();
                 cityaddname.setText(selectedPro + selectedCity + selectedArea);
-
+                Intent intent=new Intent(cityadd.this,MainActivity.class);
+                intent.putExtra("select_city",selectedArea);
+                startActivity(intent);
 
                 //添加新的页面
             }

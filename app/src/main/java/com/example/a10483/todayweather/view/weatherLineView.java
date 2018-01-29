@@ -85,7 +85,7 @@ public class weatherLineView extends View {
     private void init(Context context,AttributeSet attributeSet,int defstyleAttr){
         TypedArray a=context.obtainStyledAttributes(attributeSet,R.styleable.WeatherLineView,defstyleAttr,0);
         defaultTextSize=(int)a.getDimension(R.styleable.WeatherLineView_temperTextSize,dp2px(context,defaultTextSize));
-        defaultTextColor=a.getColor(R.styleable.WeatherLineView_weatextColor,Color.parseColor("#b07b5c"));
+        defaultTextColor=a.getColor(R.styleable.WeatherLineView_weatextColor,Color.parseColor("#ffffff"));
         weatherlinewidth=(int)a.getDimension(R.styleable.WeatherLineView_weaLineWidth,dp2px(context,weatherlinewidth));
         weatherdotradius=(int)a.getDimension(R.styleable.WeatherLineView_weadotRadius,dp2px(context,weatherdotradius));
         textdotdistance=(int)a.getDimension(R.styleable.WeatherLineView_textDotDistance,dp2px(context,textdotdistance));
@@ -129,7 +129,7 @@ public class weatherLineView extends View {
             return;
         }
 
-        canvas.drawColor(Color.YELLOW);
+        canvas.drawColor(Color.parseColor("#8bb1d9"));
         int textHight=(int)(fontMetrics.bottom-fontMetrics.top);
         int baseHeight=getHeight()-textHight-textdotdistance;
 
