@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
         setLifeData(lifenum,requestQueue);
         setWeightlistener();
 
-        if(list!=null){
+        if(list.size()!=0){
             Intent service=new Intent(this,foregroundService.class);
             service.putExtra("cityname",city).putExtra("tmp",list.get(0)).putExtra("wea",list.get(1));
             startService(service);
